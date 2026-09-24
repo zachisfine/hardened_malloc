@@ -825,6 +825,8 @@ static inline void deallocate_small(void *p, const size_t *expected_size) {
         bool skip_zero = false;
 #ifdef HAS_ARM_MTE
         if (likely51(is_memtag_enabled())) {
+            // Validate and clear memory tag for MTE-enabled systems
+            // arm_mte_tag_and_clear_mem() handles proper tag validation and clearing
             arm_mte_tag_and_clear_mem(set_pointer_tag(p, RESERVED_TAG), size);
             // metadata->arm_mte_tags is intentionally not updated, see tag_and_clear_slab_slot()
             skip_zero = true;
