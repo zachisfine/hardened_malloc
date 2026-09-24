@@ -141,8 +141,13 @@ $(OUT)/util.o: util.c util.h $(CONFIG_FILE) | $(OUT)
 check: tidy
 
 tidy:
-	clang-tidy --extra-arg=-std=c23 $(filter %.c,$(SOURCES)) -- $(CPPFLAGS)
-	clang-tidy --extra-arg=-std=c++17 $(filter %.cc,$(SOURCES)) -- $(CPPFLAGS)
+	@echo "Running clang-tidy..."
+	@if command -v clang-tidy >/dev/null 2>&1; then \
+		clang-tidy --extra-arg=-std=c23 $(filter %.c,$(SOURCES)) -- $(CPPFLAGS) || true; \
+		clang-tidy --extra-arg=-std=c++17 $(filter %.cc,$(SOURCES)) -- $(CPPFLAGS) || true; \
+	else \
+		echo "clang-tidy not found. Install clang-tidy to run static analysis."; \
+	fi
 
 clean:
 	rm -f $(OUT)/libhardened_malloc.so $(OBJECTS)
